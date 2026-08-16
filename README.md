@@ -8,25 +8,6 @@ and language generation, never as the sole arbiter of fit.
 Full design rationale: see `docs/JobFit_Design_v1.md` (product scope, architecture,
 schema, scoring algorithm, security model, roadmap).
 
-## Status
-
-Build-in-progress, implemented phase by phase. Current state:
-
-- [x] Phase 0 — project scaffold, CI, Docker Compose, migrations baseline
-- [x] Phase 1 — auth (register/login/refresh/logout), JWT, user profile
-- [x] Phase 2 — resume upload & parsing (deterministic extraction, review/edit UI)
-- [x] Phase 3 — job input & JD parsing (deterministic section extraction, skill/soft-skill tagging)
-- [x] Phase 4 — matching & scoring engine (deterministic scorer, evidence linking)
-- [x] Phase 5 — Job Analysis UI (score breakdown, evidence, recommendation)
-- [x] Phase 6 — applications tracking (status lifecycle + history)
-- [x] Phase 7 — dashboard (aggregate stats, skill trends, best-fit roles)
-- [x] Phase 8 — job comparison (side-by-side score breakdown + skill overlap)
-- [x] Phase 9 — resume quality analysis (rule-based writing linter, independent of any job)
-- [x] Phase 10 — hardening (rate limiting, security headers, IDOR test audit) & AWS deployment config
-
-All 11 phases are now built. See `docs/DEPLOYMENT.md` for what "deployment" means in
-this repo - deployment-ready config and a runbook, not a hosted live instance (see that
-doc's opening note for why).
 
 ## Stack
 
