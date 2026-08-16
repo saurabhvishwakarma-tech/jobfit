@@ -1,0 +1,51 @@
+{
+  "family": "jobfit-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/jobfit-ecs-execution-role",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/jobfit-ecs-task-role",
+  "containerDefinitions": [
+    {
+      "name": "jobfit-backend",
+      "image": "<ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/jobfit-backend:<IMAGE_TAG>",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 8080, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "PORT", "value": "8080" },
+        { "name": "STORAGE_PROVIDER", "value": "s3" },
+        { "name": "STORAGE_S3_BUCKET", "value": "jobfit-resumes-prod" },
+        { "name": "CORS_ALLOWED_ORIGINS", "value": "https://app.jobfit.example.com" },
+        { "name": "AI_PROVIDER", "value": "stub" },
+        { "name": "JWT_ACCESS_TTL_MIN", "value": "15" },
+        { "name": "JWT_REFRESH_TTL_DAYS", "value": "14" },
+        { "name": "AUTH_RATE_LIMIT_PER_MIN", "value": "20" }
+      ],
+      "secrets": [
+        { "name": "DB_URL", "valueFrom": "arn:aws:secretsmanager:<AWS_REGION>:<ACCOUNT_ID>:secret:jobfit/db-url" },
+        { "name": "DB_USERNAME", "valueFrom": "arn:aws:secretsmanager:<AWS_REGION>:<ACCOUNT_ID>:secret:jobfit/db-username" },
+        { "name": "DB_PASSWORD", "valueFrom": "arn:aws:secretsmanager:<AWS_REGION>:<ACCOUNT_ID>:secret:jobfit/db-password" },
+        { "name": "JWT_SECRET", "valueFrom": "arn:aws:secretsmanager:<AWS_REGION>:<ACCOUNT_ID>:secret:jobfit/jwt-secret" },
+        { "name": "AI_API_KEY", "valueFrom": "arn:aws:secretsmanager:<AWS_REGION>:<ACCOUNT_ID>:secret:jobfit/ai-api-key" }
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health/liveness || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 45
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/jobfit-backend",
+          "awslogs-region": "<AWS_REGION>",
+          "awslogs-stream-prefix": "backend"
+        }
+      }
+    }
+  ]
+}

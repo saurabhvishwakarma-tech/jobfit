@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:jobfit;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: false
+
+jobfit:
+  security:
+    jwt:
+      secret: test-secret-key-for-junit-tests-only-not-for-prod-use-1234567890
+      access-token-ttl-minutes: 15
+      refresh-token-ttl-days: 14

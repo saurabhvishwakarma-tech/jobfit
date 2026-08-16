@@ -1,0 +1,42 @@
+erDiagram
+    USERS ||--o{ REFRESH_TOKENS : has
+    USERS ||--o{ RESUMES : owns
+    USERS ||--o{ JOBS : owns
+    USERS ||--o{ APPLICATIONS : owns
+
+    RESUMES ||--o| CONTACT_INFOS : has
+    RESUMES ||--o{ EXPERIENCES : has
+    EXPERIENCES ||--o{ EXPERIENCE_HIGHLIGHTS : has
+    RESUMES ||--o{ EDUCATIONS : has
+    RESUMES ||--o{ CERTIFICATIONS : has
+    RESUMES ||--o{ PROJECTS : has
+    RESUMES ||--o{ RESUME_SKILLS : has
+    SKILLS ||--o{ RESUME_SKILLS : "tagged via"
+
+    JOBS ||--o{ JOB_REQUIREMENTS : has
+    SKILLS ||--o{ JOB_REQUIREMENTS : "normalized to"
+
+    MATCH_ANALYSES }o--|| RESUMES : analyses
+    MATCH_ANALYSES }o--|| JOBS : analyses
+    MATCH_ANALYSES ||--o{ SCORE_COMPONENTS : breaks_down_into
+    MATCH_ANALYSES ||--o{ EVIDENCE : produces
+    EVIDENCE }o--|| JOB_REQUIREMENTS : maps_to
+
+    APPLICATIONS }o--|| JOBS : "for"
+    APPLICATIONS }o--|| RESUMES : "used"
+    APPLICATIONS }o--o| MATCH_ANALYSES : snapshot
+    APPLICATIONS ||--o{ APPLICATION_STATUS_HISTORY : has
+
+    USERS {
+        bigint id PK
+        string email UK
+        string password_hash
+        string full_name
+    }
+    REFRESH_TOKENS {
+        bigint id PK
+        bigint user_id FK
+        string token_hash UK
+        timestamp expires_at
+        boolean revoked
+    }

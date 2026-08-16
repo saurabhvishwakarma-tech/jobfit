@@ -1,0 +1,40 @@
+flowchart TB
+    subgraph Client
+        FE["React + TypeScript SPA"]
+    end
+
+    subgraph "Spring Boot Modular Monolith"
+        API["REST API Layer"]
+        subgraph Modules
+            USER[user]
+            RESUME[resume]
+            RPARSE[resumeparsing]
+            JOB[job]
+            JPARSE[jobparsing]
+            MATCH[matching]
+            SCORE[scoring]
+            APP[application]
+            ANALYTICS[analytics]
+            RQUALITY[resumequality]
+            AI[ai]
+        end
+        COMMON[common: security, exceptions, validation, rate limiting]
+    end
+
+    DB[(PostgreSQL)]
+    S3[(S3 - resume files)]
+    LLM["LLM Provider (pluggable adapter)"]
+
+    FE -->|HTTPS/JSON, JWT bearer| API
+    API --> USER & RESUME & JOB & APP & ANALYTICS & RQUALITY
+    RESUME --> RPARSE
+    JOB --> JPARSE
+    RPARSE --> AI
+    JPARSE --> AI
+    MATCH --> SCORE
+    RESUME --> MATCH
+    JOB --> MATCH
+    RESUME --> RQUALITY
+    AI -->|adapter interface| LLM
+    USER & RESUME & JOB & MATCH & APP & ANALYTICS & RQUALITY --> DB
+    RESUME --> S3

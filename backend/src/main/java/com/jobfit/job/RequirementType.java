@@ -1,0 +1,5 @@
+package com.jobfit.job;
+
+public enum RequirementType {
+    REQUIRED_SKILL, PREFERRED_SKILL, EXPERIENCE_YEARS, EDUCATION, RESPONSIBILITY, DOMAIN, SOFT_SKILL
+}
